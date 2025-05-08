@@ -6,9 +6,16 @@ const db = require("./db");
 // const multer = require("multer");
 const { router: authRoutes } = require("./authRoutes");
 const userRoutes = require("./userRoutes");
+const { initWebSocket } = require('websocket-bridge/client');
+const http = require('http');
+
 
 dotenv.config();
 const app = express();
+const server = http.createServer(app);
+
+initWebSocket(server);
+
 
 // const storage = multer.diskStorage({
 //   destination: function (req, res, cb) {
@@ -47,4 +54,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });

@@ -1,8 +1,16 @@
 const express = require("express");
 const db = require("./db");
-const { authenticateToken, uploadFile } = require("./authRoutes");
+const { authenticateToken } = require("./authRoutes");
+const uploadFile = require("multer-upload-helper");
+
 
 const router = express.Router();
+
+const upload = uploadFile({
+  destination: "uploads/",
+  maxSize: 2 * 1024 * 1024, // 2MB
+  allowedTypes: /jpeg|jpg|png|pdf/
+});
 
 // 🟢 Get All Users (Admin Only)
 router.get("/", authenticateToken, async (req, res) => {
@@ -53,7 +61,7 @@ router.put("/:id", authenticateToken, async (req, res) => {
 //upload file
 router.post(
   "/upload/:userId",authenticateToken,
-  uploadFile.single("myFile"),
+  upload.single("myFile"),
   async (req, res) => {
     if (!req.file) return res.status(400).send("no file uploaded");
     const { filename, path: filepath } = req.file;

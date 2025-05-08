@@ -32,6 +32,27 @@ PORT=5000
 Run the MySQL Database**
 CREATE DATABASE your_database_name;
 
+-- Users table
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY, -- Auto-increment ID
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Resume Uploads table
+CREATE TABLE resume_uploads (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    filename VARCHAR(255) NOT NULL,
+    filepath TEXT NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
 ### 4️⃣ **Start the Server**
 npm run dev
 
